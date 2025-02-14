@@ -1,11 +1,7 @@
 import { Outlet } from "react-router"
 
 const PersonLayout: React.FC = () => {
-  return (
-    <div>
-      <Outlet />
-    </div>
-  )
+  return <Outlet />
 }
 
 export default PersonLayout

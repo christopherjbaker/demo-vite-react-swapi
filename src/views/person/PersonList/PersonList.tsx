@@ -1,5 +1,7 @@
 import { Link } from "react-router"
 
+import ErrorIndicator from "#design/ErrorIndicator"
+import LoadingIndicator from "#design/LoadingIndicator"
 import Page from "#design/Page"
 import { usePersonList } from "#shared/services/swapi"
 
@@ -8,22 +10,22 @@ const PersonList: React.FC = () => {
 
   if (status === "error") {
     return (
-      <div>
-        <h1>Error: {error.message}</h1>
-      </div>
+      <Page title="People">
+        <ErrorIndicator error={error} />
+      </Page>
     )
   }
 
   if (status === "pending") {
     return (
-      <div>
-        <h1>Loading...</h1>
-      </div>
+      <Page title="People">
+        <LoadingIndicator />
+      </Page>
     )
   }
 
   return (
-    <Page title="Person List">
+    <Page title="People">
       <ul>
         {data.map((person) => (
           <li key={person.id}>

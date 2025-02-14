@@ -9,21 +9,19 @@ import Drawer from "@mui/material/Drawer"
 import IconButton from "@mui/material/IconButton"
 import MenuItem from "@mui/material/MenuItem"
 import Toolbar from "@mui/material/Toolbar"
+import Typography from "@mui/material/Typography"
 import { useState } from "react"
+import { Link as RouterLink } from "react-router"
 
 import ColorModeDropdown from "./ColorModeDropdown"
 
-// const navigation = [
-//   { to: "/", label: "Home" },
-//   { to: "/people", label: "People" },
-// ]
+const navigation = [
+  { to: "/", label: "Home" },
+  { to: "/people", label: "People" },
+]
 
 const Header: React.FC = () => {
   const [open, setOpen] = useState(false)
-
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen)
-  }
 
   return (
     <AppBar
@@ -33,70 +31,47 @@ const Header: React.FC = () => {
         boxShadow: 0,
         bgcolor: "transparent",
         backgroundImage: "none",
-        mt: "calc(var(--template-frame-height, 0px) + 28px)",
+        mt: 2,
       }}
     >
       <Container maxWidth="lg">
-        <Toolbar variant="dense" disableGutters>
-          <Box
-            sx={{ flexGrow: 1, display: "flex", alignItems: "center", px: 0 }}
-          >
-            <div>SW API</div>
-            <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <Button variant="text" color="info" size="small">
-                Features
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Testimonials
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Highlights
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Pricing
-              </Button>
-              <Button
-                variant="text"
-                color="info"
-                size="small"
-                sx={{ minWidth: 0 }}
-              >
-                FAQ
-              </Button>
-              <Button
-                variant="text"
-                color="info"
-                size="small"
-                sx={{ minWidth: 0 }}
-              >
-                Blog
-              </Button>
-            </Box>
-          </Box>
-          <Box
+        <Toolbar
+          variant="dense"
+          disableGutters
+          sx={{
+            justifyContent: "space-between",
+            borderRadius: 4,
+            backdropFilter: "blur(24px)",
+            border: "1px solid",
+            borderColor: "divider",
+            boxShadow: 4,
+            padding: 1,
+          }}
+        >
+          <Typography
+            color="primary"
             sx={{
-              display: { xs: "none", md: "flex" },
-              gap: 1,
-              alignItems: "center",
+              display: "flex",
+              fontSize: "1.5rem",
+              lineHeight: 1,
+              fontWeight: "bold",
+              paddingLeft: "0.85rem",
+              paddingRight: "0.85rem",
             }}
           >
-            <Button color="primary" variant="text" size="small">
-              Sign in
-            </Button>
-            <Button color="primary" variant="contained" size="small">
-              Sign up
-            </Button>
-            <ColorModeDropdown />
-          </Box>
+            SWAPI
+          </Typography>
+
           <Box sx={{ display: { xs: "flex", md: "none" }, gap: 1 }}>
             <ColorModeDropdown size="medium" />
-            <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
+            <IconButton aria-label="Menu button" onClick={() => setOpen(true)}>
               <MenuIcon />
             </IconButton>
+
             <Drawer
               anchor="top"
               open={open}
-              onClose={toggleDrawer(false)}
+              onClose={() => setOpen(false)}
               PaperProps={{
                 sx: {
                   top: "var(--template-frame-height, 0px)",
@@ -110,16 +85,17 @@ const Header: React.FC = () => {
                     justifyContent: "flex-end",
                   }}
                 >
-                  <IconButton onClick={toggleDrawer(false)}>
+                  <IconButton onClick={() => setOpen(false)}>
                     <CloseRoundedIcon />
                   </IconButton>
                 </Box>
-                <MenuItem>Features</MenuItem>
-                <MenuItem>Testimonials</MenuItem>
-                <MenuItem>Highlights</MenuItem>
-                <MenuItem>Pricing</MenuItem>
-                <MenuItem>FAQ</MenuItem>
-                <MenuItem>Blog</MenuItem>
+
+                {navigation.map(({ label, to }) => (
+                  <MenuItem key={label} component={RouterLink} to={to}>
+                    {label}
+                  </MenuItem>
+                ))}
+
                 <Divider sx={{ my: 3 }} />
                 <MenuItem>
                   <Button color="primary" variant="contained" fullWidth>
@@ -133,6 +109,33 @@ const Header: React.FC = () => {
                 </MenuItem>
               </Box>
             </Drawer>
+          </Box>
+
+          <Box sx={{ display: { xs: "none", md: "flex" }, flexGrow: 1 }}>
+            {navigation.map(({ label, to }) => (
+              <Button
+                key={label}
+                component={RouterLink}
+                to={to}
+                variant="text"
+                color="info"
+                sx={{
+                  fontSize: "1rem",
+                  lineHeight: 1.25,
+                }}
+              >
+                {label}
+              </Button>
+            ))}
+          </Box>
+          <Box sx={{ display: { xs: "none", md: "flex" }, gap: 1 }}>
+            <Button color="primary" variant="text" size="small">
+              Sign in
+            </Button>
+            <Button color="primary" variant="contained" size="small">
+              Sign up
+            </Button>
+            <ColorModeDropdown size="small" />
           </Box>
         </Toolbar>
       </Container>

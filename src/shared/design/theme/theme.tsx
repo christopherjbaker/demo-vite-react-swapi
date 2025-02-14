@@ -63,6 +63,15 @@ const theme = createTheme({
       fontWeight: 400,
     },
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+        },
+      },
+    },
+  },
 })
 
 const Theme: React.FC<ThemeProps> = ({ children }) => {

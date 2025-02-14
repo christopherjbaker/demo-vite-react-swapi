@@ -9,12 +9,12 @@ const Footer: React.FC = () => {
         flexDirection: "column",
         alignItems: "center",
         textAlign: { sm: "center", md: "left" },
+        gap: 0.5,
+        py: 2,
       }}
     >
-      <Typography variant="body2" gutterBottom sx={{ fontWeight: 600, mt: 2 }}>
-        Join the newsletter
-      </Typography>
-      <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
+      <Typography sx={{ fontWeight: "bold" }}>Join the newsletter</Typography>
+      <Typography sx={{ color: "text.secondary" }}>
         Subscribe for weekly updates. No spams ever!
       </Typography>
     </Container>

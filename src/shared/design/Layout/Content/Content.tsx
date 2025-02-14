@@ -5,7 +5,7 @@ const Footer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <Container
       maxWidth="lg"
       component="main"
-      sx={{ display: "flex", flexDirection: "column", my: 16, gap: 4 }}
+      sx={{ display: "flex", flexDirection: "column", my: 12, gap: 4 }}
     >
       {children}
     </Container>

@@ -1,5 +1,5 @@
 {
-  "name": "hs-app",
+  "name": "demo-vite-react-swapi",
   "private": true,
   "version": "0.0.0",
   "type": "module",

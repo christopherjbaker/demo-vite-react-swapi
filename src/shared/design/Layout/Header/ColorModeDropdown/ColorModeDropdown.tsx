@@ -8,10 +8,12 @@ import { useState } from "react"
 
 const ColorModeDropdown: React.FC<IconButtonOwnProps> = ({ ...props }) => {
   const { mode, systemMode, setMode } = useColorScheme()
+  const resolvedMode = (systemMode ?? mode) as "light" | "dark"
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleToggle = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
 
@@ -19,8 +21,8 @@ const ColorModeDropdown: React.FC<IconButtonOwnProps> = ({ ...props }) => {
     setAnchorEl(null)
   }
 
-  const handleMode = (targetMode: "system" | "light" | "dark") => () => {
-    setMode(targetMode)
+  const handleMode = (mode: "system" | "light" | "dark") => () => {
+    setMode(mode)
     handleClose()
   }
 
@@ -28,33 +30,26 @@ const ColorModeDropdown: React.FC<IconButtonOwnProps> = ({ ...props }) => {
     return null
   }
 
-  const resolvedMode = (systemMode ?? mode) as "light" | "dark"
-  const icon = {
-    light: <LightModeIcon />,
-    dark: <DarkModeIcon />,
-  }[resolvedMode]
-
   return (
     <>
       <IconButton
-        data-screenshot="toggle-mode"
-        onClick={handleClick}
-        disableRipple
-        size="small"
-        aria-controls={open ? "color-scheme-menu" : undefined}
+        onClick={handleToggle}
         aria-haspopup="true"
+        aria-controls={open ? "color-scheme-menu" : undefined}
         aria-expanded={open ? "true" : undefined}
         {...props}
       >
-        {icon}
+        {resolvedMode === "light" && <LightModeIcon />}
+        {resolvedMode === "dark" && <DarkModeIcon />}
       </IconButton>
 
       <Menu
         anchorEl={anchorEl}
-        id="account-menu"
         open={open}
         onClose={handleClose}
         onClick={handleClose}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         slotProps={{
           paper: {
             variant: "outlined",
@@ -64,8 +59,6 @@ const ColorModeDropdown: React.FC<IconButtonOwnProps> = ({ ...props }) => {
             },
           },
         }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem selected={mode === "system"} onClick={handleMode("system")}>
           System
