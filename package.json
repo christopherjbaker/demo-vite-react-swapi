@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "imports": {
-    "#shared/*": "./src/shared/*/index.ts",
     "#design/*": "./src/shared/design/*/index.ts",
-    "#design/*.css": "./src/shared/design/*/index.css"
+    "#design/*.css": "./src/shared/design/*/index.css",
+    "#shared/*": "./src/shared/*/index.ts"
   },
   "scripts": {
     "lint": "npm run lint-typecheck && npm run lint-eslint && npm run lint-prettier && npm run lint-depcheck",
@@ -20,8 +20,14 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@fontsource/roboto": "^5.1.1",
+    "@mui/icons-material": "^6.4.4",
+    "@mui/material": "^6.4.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-router": "^7.1.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

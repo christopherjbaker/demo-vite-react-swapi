@@ -6,3 +6,6 @@ ignores:
   - "@testing-library/*"
   - eslint-import-resolver-typescript
   - typescript-plugin-*
+
+  # Temp
+  - "@mui/icons-material"
