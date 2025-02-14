@@ -1,26 +1,12 @@
-import { Link, Outlet } from "react-router"
+import { Outlet } from "react-router"
 
-const navigation = [
-  { to: "/", label: "Home" },
-  { to: "/people", label: "People" },
-]
+import Layout from "#design/Layout"
 
 const AppLayout: React.FC = () => {
   return (
-    <div>
-      <div>AppLayout</div>
-      <nav>
-        <ul>
-          {navigation.map(({ to, label }) => (
-            <li key={label}>
-              <Link to={to}>{label}</Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
+    <Layout>
       <Outlet />
-    </div>
+    </Layout>
   )
 }
 

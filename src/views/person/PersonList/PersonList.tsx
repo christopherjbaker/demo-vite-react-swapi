@@ -1,5 +1,6 @@
 import { Link } from "react-router"
 
+import Page from "#design/Page"
 import { usePersonList } from "#shared/services/swapi"
 
 const PersonList: React.FC = () => {
@@ -22,8 +23,7 @@ const PersonList: React.FC = () => {
   }
 
   return (
-    <div>
-      <h1>Person List</h1>
+    <Page title="Person List">
       <ul>
         {data.map((person) => (
           <li key={person.id}>
@@ -31,7 +31,7 @@ const PersonList: React.FC = () => {
           </li>
         ))}
       </ul>
-    </div>
+    </Page>
   )
 }
 
