@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument */
 
 import eslint from "@eslint/js"
-import tseslint from "typescript-eslint"
 import importPlugin from "eslint-plugin-import"
 import reactPlugin from "eslint-plugin-react"
 import reactHooksPlugin from "eslint-plugin-react-hooks"
+import tseslint from "typescript-eslint"
 
 export default tseslint.config(
   {
@@ -27,6 +27,7 @@ export default tseslint.config(
         typescript: true,
         node: true,
       },
+      "import/internal-regex": "^#",
     },
   },
   eslint.configs.recommended,
@@ -53,6 +54,9 @@ export default tseslint.config(
 
       "@typescript-eslint/no-confusing-void-expression": "off",
       "@typescript-eslint/no-inferrable-types": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/prefer-regexp-exec": "off",
+      "@typescript-eslint/restrict-template-expressions": "off",
       "@typescript-eslint/array-type": ["error", { default: "array-simple" }],
       "@typescript-eslint/consistent-type-imports": "error",
       "@typescript-eslint/explicit-module-boundary-types": "error",
@@ -63,6 +67,35 @@ export default tseslint.config(
       "import/newline-after-import": "error",
       "import/no-absolute-path": "error",
       "import/no-useless-path-segments": "error",
+    },
+  },
+  {
+    rules: {
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        {
+          prefer: "no-type-imports",
+          fixStyle: "inline-type-imports",
+        },
+      ],
+      "import/order": [
+        "error",
+        {
+          "newlines-between": "always",
+          alphabetize: {
+            order: "asc",
+            caseInsensitive: true,
+          },
+          groups: [
+            "builtin",
+            "external",
+            "internal",
+            "parent",
+            "sibling",
+            "index",
+          ],
+        },
+      ],
     },
   },
 )
