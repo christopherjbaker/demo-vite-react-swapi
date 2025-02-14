@@ -1,0 +1,8 @@
+ignore-dirs:
+  - dist
+
+ignores:
+  - "@types/*"
+  - "@testing-library/*"
+  - eslint-import-resolver-typescript
+  - typescript-plugin-*
