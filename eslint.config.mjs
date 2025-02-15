@@ -52,6 +52,7 @@ export default tseslint.config(
         { ignoreRestSiblings: true, args: "none" },
       ],
 
+      "@typescript-eslint/no-unnecessary-type-parameters": "off",
       "@typescript-eslint/no-confusing-void-expression": "off",
       "@typescript-eslint/no-inferrable-types": "off",
       "@typescript-eslint/no-unsafe-assignment": "off",

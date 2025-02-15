@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
-
 type SwapiResource =
   | "films"
   | "people"
@@ -8,43 +6,46 @@ type SwapiResource =
   | "starships"
   | "vehicles"
 
-export type SwapiUrlList = `https://swapi.dev/api/${SwapiResource}`
-export type SwapiUrlDetails = `https://swapi.dev/api/${SwapiResource}/${number}`
+export type SwapiPathList = `/${SwapiResource}`
+export type SwapiPathDetails = `/${SwapiResource}/${number}`
+export type SwapiUrlList = `https://swapi.dev/api${SwapiPathList}`
+export type SwapiUrlDetails = `https://swapi.dev/api${SwapiPathDetails}`
 
 export interface SwapiItemBase {
   created: Date
   edited: Date
-  id: string
+  id: number
   url: SwapiUrlDetails
 }
 
-// type SwapiListResponse = { results: SwapiItemBase[] }
-// type SwapiDetailsResponse = SwapiItemBase
-type SwapiError = { detail: string }
-// type SwapiSuccess = SwapiListResponse | SwapiDetailsResponse
-// type SwapiResponse = SwapiSuccess | SwapiError
+interface SwapiError {
+  detail: string
+}
 
-export async function getSwapi<Data>(path: string): Promise<Data> {
+export async function getSwapi<Data extends SwapiItemBase | SwapiItemBase[]>(
+  path: SwapiPathList | SwapiPathDetails,
+): Promise<Data> {
   const response = await fetch(`https://swapi.dev/api${path}`)
-  const data = (await response.json()) as unknown //as SwapiResponse
+  const data = extractSwapiData<Data>(await response.json())
 
-  if (!response.ok) {
-    throw new Error((data as SwapiError).detail)
-  }
-  if (typeof data !== "object" || !data) {
-    throw new Error("No data.")
-  }
-
-  if ("results" in data) {
-    if (Array.isArray(data.results)) {
-      for (const item of data.results) {
-        transformItem(item as Partial<Record<string, unknown>>)
-      }
-
-      return data.results as Data
+  if (!response.ok || isError(data)) {
+    if (isError(data)) {
+      throw new Error(data.detail)
     }
-  } else {
-    transformItem(data as Partial<Record<string, unknown>>)
+
+    throw new Error("Something went wrong.")
+  }
+
+  if (isList(data)) {
+    for (const item of data) {
+      transformItem(item)
+    }
+
+    return data as Data
+  }
+
+  if (isDetails(data)) {
+    transformItem(data)
 
     return data as Data
   }
@@ -52,7 +53,18 @@ export async function getSwapi<Data>(path: string): Promise<Data> {
   throw new Error("Bad data.")
 }
 
-function transformItem(data: Partial<Record<string, unknown>>) {
+function extractSwapiData<Data>(data: unknown): SwapiError | Data {
+  if (!data || typeof data !== "object") throw new Error("Invalid response.")
+
+  if ("detail" in data) return data as SwapiError
+  if ("results" in data) return data.results as Data
+  else return data as Data
+}
+
+function transformItem(data_: SwapiItemBase): void {
+  // These kinds of cleanup transforms are messy with respect to types.
+  const data = data_ as unknown as Partial<Record<string, unknown>>
+
   for (const key in data) {
     const value = data[key]
 
@@ -67,19 +79,27 @@ function transformItem(data: Partial<Record<string, unknown>>) {
     }
   }
 
-  // @ts-expect-error: fix later
-  // eslint-disable-next-line
-  data.id = data.url.split("/").slice(-2)[0]
+  if (typeof data.url === "string") {
+    const parts = data.url.split("/").reverse()
+    const part = parts.find((part) => part.match(/^\d+$/))
+    if (part) {
+      data.id = parseInt(part, 10)
+    }
+  }
 }
 
-// function isError(data: SwapiResponse): data is SwapiError {
-//   return "detail" in data
-// }
+function isError(data: unknown): data is SwapiError {
+  return typeof data === "object" && data !== null && "detail" in data
+}
 
-// function isList(data: SwapiSuccess): data is SwapiListResponse {
-//   return "results" in data
-// }
+function isList(
+  data: SwapiItemBase | SwapiItemBase[],
+): data is SwapiItemBase[] {
+  return Array.isArray(data)
+}
 
-// function isDetails(data: SwapiSuccess): data is SwapiDetailsResponse {
-//   return !("results" in data)
-// }
+function isDetails(
+  data: SwapiItemBase | SwapiItemBase[],
+): data is SwapiItemBase {
+  return !Array.isArray(data)
+}

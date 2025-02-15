@@ -29,7 +29,7 @@ const rows: Array<{
 const PersonDetails: React.FC = () => {
   const { personId } = useParams() as { personId: string }
 
-  const { status, data, error } = usePersonDetails(personId)
+  const { status, data, error } = usePersonDetails(+personId)
 
   if (status === "error") {
     return (
