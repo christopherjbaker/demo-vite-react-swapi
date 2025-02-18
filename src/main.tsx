@@ -22,7 +22,7 @@ ReactDOM.createRoot(element).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <Theme>
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
           <App />
         </BrowserRouter>
       </Theme>
