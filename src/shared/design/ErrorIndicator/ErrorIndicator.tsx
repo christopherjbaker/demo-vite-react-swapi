@@ -1,7 +1,10 @@
 import Alert from "@mui/material/Alert"
 import Box from "@mui/material/Box"
 
-const ErrorIndicator: React.FC<{ error: Error }> = ({ error }) => {
+const ErrorIndicator: React.FC<{ error?: Error; onReload?: () => void }> = ({
+  error,
+  onReload,
+}) => {
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
       <Alert
@@ -15,8 +18,13 @@ const ErrorIndicator: React.FC<{ error: Error }> = ({ error }) => {
           },
         }}
       >
-        <div>Error: {error.message}</div>
+        <div>{error ? `Error: ${error.message}` : "Error"}</div>
         <div>An error occurred. Please try again.</div>
+        {onReload && (
+          <div>
+            <button onClick={onReload}>Reload</button>
+          </div>
+        )}
       </Alert>
     </Box>
   )

@@ -9,7 +9,16 @@ import PersonList from "../views/person/PersonList"
 const App: React.FC = () => {
   return (
     <Routes>
-      <Route element={<AppLayout />}>
+      <Route
+        element={
+          <AppLayout
+            navigation={[
+              { to: "/", label: "Home" },
+              { to: "/people", label: "People" },
+            ]}
+          />
+        }
+      >
         <Route index element={<Home />} />
 
         <Route path="people" element={<PersonLayout />}>

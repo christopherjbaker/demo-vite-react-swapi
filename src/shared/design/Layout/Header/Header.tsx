@@ -15,12 +15,13 @@ import { Link as RouterLink } from "react-router"
 
 import ColorModeDropdown from "./ColorModeDropdown"
 
-const navigation = [
-  { to: "/", label: "Home" },
-  { to: "/people", label: "People" },
-]
+export interface NavigationItem {
+  to: string
+  label: string
+  exact?: boolean
+}
 
-const Header: React.FC = () => {
+const Header: React.FC<{ navigation: NavigationItem[] }> = ({ navigation }) => {
   const [open, setOpen] = useState(false)
 
   return (

@@ -1,10 +1,12 @@
 import { Outlet } from "react-router"
 
-import Layout from "#design/Layout"
+import Layout, { NavigationItem } from "#design/Layout"
 
-const AppLayout: React.FC = () => {
+const AppLayout: React.FC<{ navigation: NavigationItem[] }> = ({
+  navigation,
+}) => {
   return (
-    <Layout>
+    <Layout navigation={navigation}>
       <Outlet />
     </Layout>
   )

@@ -13,9 +13,9 @@ const Footer: React.FC = () => {
         py: 2,
       }}
     >
-      <Typography sx={{ fontWeight: "bold" }}>Join the newsletter</Typography>
+      <Typography sx={{ fontWeight: "bold" }}>Primary footer text.</Typography>
       <Typography sx={{ color: "text.secondary" }}>
-        Subscribe for weekly updates. No spams ever!
+        Secondary footer text.
       </Typography>
     </Container>
   )

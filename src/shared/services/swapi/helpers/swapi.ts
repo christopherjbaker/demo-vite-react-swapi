@@ -1,4 +1,4 @@
-type SwapiResource =
+export type SwapiResourceType =
   | "films"
   | "people"
   | "planets"
@@ -6,26 +6,30 @@ type SwapiResource =
   | "starships"
   | "vehicles"
 
-export type SwapiPathList = `/${SwapiResource}`
-export type SwapiPathDetails = `/${SwapiResource}/${number}`
-export type SwapiUrlList = `https://swapi.dev/api${SwapiPathList}`
-export type SwapiUrlDetails = `https://swapi.dev/api${SwapiPathDetails}`
+export interface SwapiResource {
+  type: SwapiResourceType
+  id: string
+}
 
 export interface SwapiItemBase {
   created: Date
   edited: Date
+  type: SwapiResourceType
   id: number
-  url: SwapiUrlDetails
 }
 
 interface SwapiError {
   detail: string
 }
 
+const baseUrl = "https://swapi.dev/api"
+const detailsUrlMatch = new RegExp(`^${baseUrl}/(.+)/(\\d+)/?$`)
+type SwapiUrlDetails = `${typeof baseUrl}/${SwapiResourceType}/${number}`
+
 export async function getSwapi<Data extends SwapiItemBase | SwapiItemBase[]>(
-  path: SwapiPathList | SwapiPathDetails,
+  path: string,
 ): Promise<Data> {
-  const response = await fetch(`https://swapi.dev/api${path}`)
+  const response = await fetch(`${baseUrl}${path}`)
   const data = extractSwapiData<Data>(await response.json())
 
   if (!response.ok || isError(data)) {
@@ -77,14 +81,16 @@ function transformItem(data_: SwapiItemBase): void {
         data[key] = parseInt(value, 10)
       }
     }
+
+    if (isSwapiDetailsUrl(value)) {
+      data[key] = parseSwapiDetailsUrl(value)
+    }
   }
 
-  if (typeof data.url === "string") {
-    const parts = data.url.split("/").reverse()
-    const part = parts.find((part) => part.match(/^\d+$/))
-    if (part) {
-      data.id = parseInt(part, 10)
-    }
+  if (isSwapiResource(data.url)) {
+    data.type = data.url.type
+    data.id = data.url.id
+    delete data.url
   }
 }
 
@@ -102,4 +108,43 @@ function isDetails(
   data: SwapiItemBase | SwapiItemBase[],
 ): data is SwapiItemBase {
   return !Array.isArray(data)
+}
+
+function isSwapiDetailsUrl(
+  value: unknown,
+): value is SwapiUrlDetails | SwapiUrlDetails[] {
+  return (
+    (typeof value === "string" && !!value.match(detailsUrlMatch)) ||
+    (Array.isArray(value) && value.every((value) => isSwapiDetailsUrl(value)))
+  )
+}
+
+function isSwapiResource(value: unknown): value is SwapiResource {
+  return (
+    !!value && typeof value === "object" && "type" in value && "id" in value
+  )
+}
+
+function parseSwapiDetailsUrl(
+  value: SwapiUrlDetails | SwapiUrlDetails[],
+): SwapiResource | SwapiResource[] {
+  function parse(value: string): SwapiResource {
+    const match = value.match(detailsUrlMatch)
+    if (!match) throw new Error(`Invalid SwapiUrlDetails: ${value}`)
+
+    return {
+      type: match[1] as SwapiResourceType,
+      id: match[2],
+    }
+  }
+
+  if (typeof value === "string") {
+    return parse(value)
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((value) => parse(value))
+  }
+
+  throw new Error(`Invalid SwapiUrlDetails: ${JSON.stringify(value)}`)
 }

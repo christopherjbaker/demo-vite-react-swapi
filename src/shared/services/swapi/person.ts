@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query"
 
-import { getSwapi, SwapiItemBase, SwapiUrlDetails } from "./helpers/swapi"
+import { getSwapi, SwapiItemBase, SwapiResource } from "./helpers/swapi"
 
 export interface Person extends SwapiItemBase {
   name: string
@@ -12,11 +12,11 @@ export interface Person extends SwapiItemBase {
   hair_color: string
   skin_color: string
 
-  homeworld: SwapiUrlDetails
-  species: SwapiUrlDetails[]
-  starships: SwapiUrlDetails[]
-  vehicles: SwapiUrlDetails[]
-  films: SwapiUrlDetails[]
+  homeworld: SwapiResource
+  species: SwapiResource[]
+  starships: SwapiResource[]
+  vehicles: SwapiResource[]
+  films: SwapiResource[]
 }
 
 export async function getPersonDetails(personId: number): Promise<Person> {

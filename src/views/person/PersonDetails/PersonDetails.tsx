@@ -4,6 +4,7 @@ import TableBody from "@mui/material/TableBody"
 import TableCell from "@mui/material/TableCell"
 import TableContainer from "@mui/material/TableContainer"
 import TableRow from "@mui/material/TableRow"
+import { isValidElement } from "react"
 import { useParams } from "react-router"
 
 import ErrorIndicator from "#design/ErrorIndicator"
@@ -57,23 +58,28 @@ const PersonDetails: React.FC = () => {
       >
         <Table aria-label="person details" stickyHeader>
           <TableBody>
-            {rows.map(({ key, label, transform }) => (
-              <TableRow
-                key={label}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {label}
-                </TableCell>
-                <TableCell>
-                  {transform
-                    ? transform(data[key])
-                    : data[key] instanceof Date
-                      ? data[key].toLocaleDateString()
-                      : data[key]}
-                </TableCell>
-              </TableRow>
-            ))}
+            {rows.map(({ key, label, transform }) => {
+              const value = transform ? transform(data[key]) : data[key]
+              if (
+                !isValidElement(value) &&
+                typeof value !== "string" &&
+                typeof value !== "number"
+              ) {
+                return null
+              }
+
+              return (
+                <TableRow
+                  key={label}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {label}
+                  </TableCell>
+                  <TableCell>{value}</TableCell>
+                </TableRow>
+              )
+            })}
           </TableBody>
         </Table>
       </TableContainer>

@@ -1,6 +1,6 @@
 import Container from "@mui/material/Container"
 
-const Footer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const Content: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <Container
       maxWidth="lg"
@@ -12,4 +12,4 @@ const Footer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   )
 }
 
-export default Footer
+export default Content

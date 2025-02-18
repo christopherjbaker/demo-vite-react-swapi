@@ -10,10 +10,6 @@ import "@fontsource/roboto/400.css"
 import "@fontsource/roboto/500.css"
 import "@fontsource/roboto/700.css"
 
-export interface ThemeProps {
-  children: React.ReactNode
-}
-
 const defaultTheme = createTheme()
 
 const theme = createTheme({
@@ -74,7 +70,9 @@ const theme = createTheme({
   },
 })
 
-const Theme: React.FC<ThemeProps> = ({ children }) => {
+const Theme: React.FC<{
+  children: React.ReactNode
+}> = ({ children }) => {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>

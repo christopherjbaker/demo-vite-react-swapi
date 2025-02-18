@@ -2,12 +2,15 @@ import Divider from "@mui/material/Divider"
 
 import Content from "./Content"
 import Footer from "./Footer"
-import Header from "./Header"
+import Header, { NavigationItem } from "./Header"
 
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const Layout: React.FC<{
+  navigation: NavigationItem[]
+  children: React.ReactNode
+}> = ({ navigation, children }) => {
   return (
     <>
-      <Header />
+      <Header navigation={navigation} />
       <Content>{children}</Content>
       <Divider />
       <Footer />
